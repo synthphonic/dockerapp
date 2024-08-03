@@ -13,7 +13,7 @@ jobs:
           command: |
             apk update
             apk add --no-cache py-pip
-            pip install docker-compose==1.29.2
+            pip install docker-compose
       - run:
           name: Run tests
           command: |
