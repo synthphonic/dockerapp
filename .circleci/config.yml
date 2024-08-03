@@ -10,11 +10,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --no-cache py-pip=9.0.0-r1
-            apk add --no-cache docker=1.12.6-r0
-            pip install --upgrade pip
-            pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host=files.pythonhosted.org
-            pip install docker-compose
+            python --version
       - run:
           name: Run tests
           command: |
