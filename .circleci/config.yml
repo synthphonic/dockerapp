@@ -21,7 +21,7 @@ jobs:
             # Use environment variables or orb for secure storage
 
             docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD  # Consider orb for login
-            docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
-            docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
+            docker tag dockerapp_dockerapp-1 $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+            docker tag dockerapp_dockerapp-1 $DOCKER_HUB_USER_ID/dockerapp:latest
             docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
             docker push $DOCKER_HUB_USER_ID/dockerapp:latest
