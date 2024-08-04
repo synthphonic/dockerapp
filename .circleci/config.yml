@@ -7,21 +7,7 @@ jobs:
       - image: docker:dind  # Consider a specific version for stability
     steps:
       - checkout
-
-      # Install dependencies with package manager
-      - run:
-          name: Install dependencies (apk)
-          command: |
-            apk add --no-cache py-pip=latest  # Use latest version of pip
-            apk add --no-cache docker=latest  # Consider a specific version for stability
-
-      # Install pip and tools (consider using orb for pip)
-      - run:
-          name: Install pip and tools
-          command: |
-            pip install --upgrade pip
-            pip install docker-compose
-
+      - setup_remote_docker
       - run:
           name: Run tests
           command: |
