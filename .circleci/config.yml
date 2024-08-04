@@ -13,6 +13,10 @@ jobs:
           command: |
             docker-compose up -d
             docker-compose run dockerapp python test.py
+      - run:
+          name: Show all docker containers
+          command: |
+            docker ps
 
       - deploy:
           name: Publish application Docker image
