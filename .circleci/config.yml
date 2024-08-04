@@ -1,30 +1,40 @@
-version: 2
+version: 2.1  # Update to version 2.1
+
 jobs:
   build:
     working_directory: /dockerapp
     docker:
-      - image: docker:dind
+      - image: docker:dind  # Consider a specific version for stability
     steps:
       - checkout
-      - setup_remote_docker
+
+      # Install dependencies with package manager
       - run:
-          name: Install dependencies
+          name: Install dependencies (apk)
           command: |
-            # apk add --no-cache py-pip=9.0.0-r1
-            # apk add --no-cache docker=1.12.6-r0
-            # pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org pip setuptools
-            # pip install --upgrade pip
-            # pip install docker-compose          
+            apk add --no-cache py-pip=latest  # Use latest version of pip
+            apk add --no-cache docker=latest  # Consider a specific version for stability
+
+      # Install pip and tools (consider using orb for pip)
+      - run:
+          name: Install pip and tools
+          command: |
+            pip install --upgrade pip
+            pip install docker-compose
+
       - run:
           name: Run tests
           command: |
             docker-compose up -d
             docker-compose run dockerapp python test.py
-      - deploy: 
-        name: Publish application Docker image
-        command: |
-          docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
-          docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
-          docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest          
-          docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
-          docker push $DOCKER_HUB_USER_ID/dockerapp:latest          
+
+      - deploy:
+          name: Publish application Docker image
+          command: |
+            echo "** Warning: Not storing credentials in plain text!**"
+            # Use environment variables or orb for secure storage
+            docker login -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD  # Consider orb for login
+            docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+            docker tag dockerapp_dockerapp $DOCKER_HUB_USER_ID/dockerapp:latest
+            docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+            docker push $DOCKER_HUB_USER_ID/dockerapp:latest
